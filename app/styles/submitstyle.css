@@ -1,0 +1,50 @@
+body {
+    display: flex;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+h3{
+    color: black;
+}
+a{
+    text-decoration: none;
+    color: white;
+    background-color: black;
+    padding: 20px;
+    border: none;
+    border-radius: 10px;
+    text-align: center;
+}
+a:hover{
+    text-align: center;
+    outline: 1px dashed black;
+    background-color: white;
+    color: black;
+    transition: 0.2s ease;
+}
+.appointment-list {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    gap: 20px;
+}
+
+.appointment-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.2s;
+}
+.appointment-card h3 {
+    margin: 0 0 10px;
+    color: #000000;
+}
+
+.appointment-card p {
+    margin: 5px 0;
+    color: #555; 
+}
