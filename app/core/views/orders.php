@@ -18,6 +18,7 @@
                 echo "<p><strong>Id услуги:</strong> {$row['service_id']}</p>";
                 echo "<p><strong>Id фотографа:</strong> {$row['photographer_id']}</p>";
                 echo "<p><strong>Дата приема:</strong> {$row['date']}</p>";
+                echo "<p><strong>Пользователь ID: {$row[user_id]}</strong></p>";
                 echo "</div>";
             }
             echo "</div>";

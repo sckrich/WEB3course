@@ -23,6 +23,17 @@
         <li>
             <a href="/orders">Посмотреть заказы</a>
         </li>
+        <li>
+            <a href="/registration">Регистрация</a>
+        </li>
+        <li>
+            <a href="/athorization">Войти</a>
+        </li>
+        <?php if (isset($_SESSION['user_role'])): ?>
+            <li>
+                <a href="/profile">Профиль</a>
+            </li>
+        <?php endif; ?>
     </ul>
    </div>
 </div>

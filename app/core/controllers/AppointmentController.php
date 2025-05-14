@@ -47,11 +47,6 @@ class AppointmentController {
         }
     }
     
-
-    public function showOrders() {
-        include __DIR__ . '/../views/orders.php'; // Отображаем страницу заказов
-    }
-
     public function showSubmitForm() {
         include __DIR__ . '/../views/submitform.php'; // Отображаем страницу отправки формы
     }
