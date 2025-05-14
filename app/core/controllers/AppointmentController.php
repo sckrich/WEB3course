@@ -6,10 +6,10 @@ class AppointmentController {
         $this->conn = $conn;
     }
 
-    public function showappointmentform() {
-       include __DIR__ . '/../views/main.php'; // Отображаем главную страницу
+    public function showappointmentform(){
+       include __DIR__ . '/../views/main.php'; 
     }
-
+    
     public function create() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['service']) && isset($_POST['photographer']) && isset($_POST['date'])) {

@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/../../../styles/athoriz_or_reg_style.css">
+    <link rel="stylesheet" href="/../../../styles/logreg.css">
     <title>Document</title>
 </head>
 <body>
 <div class="container">
-        <a href="/athorization">Войти</a>
-        <a href="/registration">Зарегистрироваться</a>
+        <a class = "btn" href="/athorization">Войти</a>
+        <a class = "btn" href="/registration">Зарегистрироваться</a>
     </div>
 </body>
 </html>

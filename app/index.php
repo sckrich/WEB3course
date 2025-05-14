@@ -17,7 +17,7 @@ $router->addRoute('GET','/athorization', [$Lkcontroller, 'showathorizationForm']
 $router->addRoute('GET', '/registration', [$Lkcontroller, 'showRegistrationForm']);
 $router->addRoute('POST', '/registration', [$Lkcontroller, 'reg']);
 $router->addRoute('POST', '/athorization', [$Lkcontroller, 'authoriz']);
-$router->addRoute('GET','/athoriz_or_reg', [$Lkcontroller, 'showathoriz_or_reg_form']);
+$router->addRoute('GET','/logreg', [$Lkcontroller, 'showathoriz_or_reg_form']);
 $router->addRoute('GET', '/logout', [$Lkcontroller, 'logout']);
 $router->addRoute('GET', '/orders', [$Lkcontroller, 'display_orders']);
 $router->addRoute('GET', '/users', [$Lkcontroller, 'display_all_users']);
