@@ -39,7 +39,7 @@ class loginController{
             $user_role = 'DefaultUser';
             if (empty($user_email) && empty($user_name) && empty($user_password)){
                 echo "<script>alert('Поля не могут быть пустыми')</script>";
-                require_once __DIR__ ."/../Views/lk/registration.php";
+                require_once __DIR__ ."/../views/login/registration.php";
                 return;
             }
             $this->model->create($user_email, $user_name, $user_password, $user_role);

@@ -41,13 +41,12 @@ class AppointmentController {
             }
             echo "<a href='/'>На главную</a>";
         } else {
-            // Если метод не POST, перенаправляем на главную страницу или показываем ошибку
             header("Location: /");
             exit;
         }
     }
-    
+
     public function showSubmitForm() {
-        include __DIR__ . '/../views/submitform.php'; // Отображаем страницу отправки формы
+        include __DIR__ . '/../views/submitform.php';
     }
 }
