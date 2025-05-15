@@ -2,7 +2,7 @@
 session_start();
 require_once __DIR__ . '/../models/login.php';
 require_once __DIR__ . '/../models/order.php';
-
+require_once __DIR__ . '/../../dompdf/autoload.inc.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -115,19 +115,52 @@ class loginController{
         $dompdf->render();
         $dompdf->stream('user_report.pdf'); 
     }
-    public function downloadPDFReport_appointments() {
-        $dompdf = new Dompdf();
-        $html = '<h1>Appointments Report</h1>';
-        $appointments = $this->appointment_model->getAll();
-        foreach ($appointments as $appointment) {
-            $html .= '<p>' . htmlspecialchars($appointment['appointment_patient_name']) . ' - ' . htmlspecialchars($appointment['appointment_doctor_name']) . htmlspecialchars($appointment['appointment_date']).'</p>';
-        }
-    
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-        $dompdf->stream('appointments_report.pdf'); 
+    public function transliterate($string) {
+        $transliterationTable = [
+                'а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd',
+                'е' => 'e', 'ё' => 'yo', 'ж' => 'zh', 'з' => 'z', 'и' => 'i',
+                'й' => 'y', 'к' => 'k', 'л' => 'l', 'м' => 'm', 'н' => 'n',
+                'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't',
+                'у' => 'u', 'ф' => 'f', 'х' => 'kh', 'ц' => 'ts', 'ч' => 'ch',
+                'ш' => 'sh', 'щ' => 'shch', 'ъ' => '', 'ы' => 'y', 'ь' => '',
+                'э' => 'e', 'ю' => 'yu', 'я' => 'ya',
+                'А' => 'A', 'Б' => 'B', 'В' => 'V', 'Г' => 'G', 'Д' => 'D',
+                'Е' => 'E', 'Ё' => 'Yo', 'Ж' => 'Zh', 'З' => 'Z', 'И' => 'I',
+                'Й' => 'Y', 'К' => 'K', 'Л' => 'L', 'М' => 'M', 'Н' => 'N',
+                'О' => 'O', 'П' => 'P', 'Р' => 'R', 'С' => 'S', 'Т' => 'T',
+                'У' => 'U', 'Ф' => 'F', 'Х' => 'Kh', 'Ц' => 'Ts', 'Ч' => 'Ch',
+                'Ш' => 'Sh', 'Щ' => 'Shch', 'Ъ' => '', 'Ы' => 'Y', 'Ь' => '',
+                'Э' => 'E', 'Ю' => 'Yu', 'Я' => 'Ya'
+        ];
+
+        return strtr($string, $transliterationTable);
     }
+
+    public function downloadPDFReport_appointments() {
+    $dompdf = new Dompdf();
+    
+    $html = '<h1>All orders</h1>';
+    
+    $orders = $this->order_model->getAll();
+    
+    foreach ($orders as $order) {
+        $photographer = $this->order_model->getPhotographerById($order['photographer_id']);
+        $service = $this->order_model->getServiceById($order['service_id']);
+        
+        $photographerName = $this->transliterate($photographer['fio']);
+        $serviceName = $this->transliterate($service['name']);
+        $orderDate = $order['date'];
+
+        $html .= '<p>' . htmlspecialchars($serviceName, ENT_QUOTES, 'UTF-8') . ' - ' . htmlspecialchars($photographerName, ENT_QUOTES, 'UTF-8') . ' - ' . htmlspecialchars($orderDate, ENT_QUOTES, 'UTF-8') . '</p>';
+    }
+
+    $dompdf->loadHtml($html, 'UTF-8');
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->set_option('defaultFont', 'Go'); 
+    $dompdf->render();
+    $dompdf->stream('orders.pdf'); 
+}
+
 
     public function downloadExcelReport_users() {
         $spreadsheet = new Spreadsheet();
@@ -150,26 +183,31 @@ class loginController{
     }
 
     public function downloadExcelReport_appointments() {
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'Имя Пациента');
-        $sheet->setCellValue('B1', 'Имя Врача');
-        $sheet->setCellValue('C1', 'Дата приема');
 
-        $appointments = $this->appointment_model->getAll();
-        $row = 3;
-        foreach ($appointments as $appointment) {
-            $sheet->setCellValue('A' . $row, $appointment['appointment_patient_name']);
-            $sheet->setCellValue('B' . $row, $appointment['appointment_doctor_name']);
-            $sheet->setCellValue('C' . $row, $appointment['appointment_date']);
-            $row++;
-        }
+    $objPHPExcel = new PHPExcel();
+    $sheet = $objPHPExcel->getActiveSheet();
+    $sheet->setCellValue('A1', 'Фотограф');
+    $sheet->setCellValue('B1', 'Сервис');
+    $sheet->setCellValue('C1', 'Дата');
 
-        $writer = new Xlsx($spreadsheet);
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="appointments_report.xlsx"');
-        $writer->save('php://output'); 
+    
+    $orders = $this->order_model->getAll();
+    $row = 2; 
+    foreach ($appointments as $appointment) {
+        $sheet->setCellValue('A' . $row, $order['appointment_patient_name']);
+        $sheet->setCellValue('B' . $row, $appointment['appointment_doctor_name']);
+        $sheet->setCellValue('C' . $row, $appointment['appointment_date']);
+        $row++;
     }
+
+
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment; filename="appointments_report.xlsx"');
+
+    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+    $objWriter->save('php://output');
+}
+
 
     public function downloadCSVReport_users() {
         $users = $this->model->getAll();
@@ -187,16 +225,26 @@ class loginController{
     }
 
     public function downloadCSVReport_appointments() {
-        $appointments = $this->appointment_model->getAll();
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="appointments_report.csv"');
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="orderscsv.csv"');
 
-        $output = fopen('php://output', 'w');
-        fputcsv($output, ['Имя Пациента', 'Имя Врача', 'Дата приема']); 
+    $output = fopen('php://output', 'w');
+    fputcsv($output, ['Фотограф', 'Сервис', 'Дата']); 
 
-        foreach ($appointments as $appointment) {
-            fputcsv($output, [$appointment['appointment_patient_name'], $appointment['appointment_doctor_name'], $appointment['appointment_date']]);
-        }
-        fclose($output); 
+    $orders = $this->order_model->getAll();
+    
+    foreach ($orders as $order) {
+        $photographer = $this->order_model->getPhotographerById($order['photographer_id']);
+        $service = $this->order_model->getServiceById($order['service_id']);
+
+        $photographerName = $this->transliterate($photographer['fio']);
+        $serviceName = $this->transliterate($service['name']);
+        $orderDate = $order['date'];
+
+        fputcsv($output, [$photographerName, $serviceName, $orderDate]);
     }
+
+    fclose($output); 
+}
+
 }

@@ -13,8 +13,8 @@ class Router {
 
     public function resolve() {
         $requestedPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        error_log("url: ".PHP_URL_PATH);
         $requestedMethod = $_SERVER['REQUEST_METHOD'];
-
         foreach ($this->routes as $route) {
             if ($route['method'] === $requestedMethod && $route['path'] === $requestedPath) {
                 return call_user_func($route['callback']);
