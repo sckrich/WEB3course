@@ -77,7 +77,6 @@ color: white;
         </tbody>
     </table>
     <a href="/download_pdf_report_appointments">Скачать PDF отчет</a>
-    <a href="/exel_report_appointments">Скачать Exel отчет</a>
     <a href="/download_csv_report_appointments">Скачать CSV отчет</a>
     <a href="/profile">Обратно к профилю</a>
 </body>

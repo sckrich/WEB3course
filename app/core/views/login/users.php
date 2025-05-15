@@ -73,7 +73,6 @@
         </tbody>
     </table>
     <a href="/download_pdf_report_users">Скачать PDF отчет</a>
-    <a href="/exel_report_users">Скачать Excel отчет</a>
     <a href="/download_csv_report_users">Скачать CSV отчет</a>
     <a href="/profile">Обратно к профилю</a>
 </body>
